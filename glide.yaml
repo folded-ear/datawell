@@ -1,0 +1,4 @@
+package: github.com/folded-ear/datawell
+import:
+  - package: github.com/jinzhu/gorm
+

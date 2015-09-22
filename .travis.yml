@@ -3,6 +3,9 @@ language: go
 go:
   - 1.5.1
 
+before_install:
+  - export GO15VENDOREXPERIMENT=1
+
 install:
   - go get github.com/Masterminds/glide
-  - $GOPATH/bin/glide up
+  - glide up

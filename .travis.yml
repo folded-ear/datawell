@@ -9,5 +9,6 @@ before_install:
 install:
   - go get github.com/Masterminds/glide
   - glide up
+  - glide rebuild
 
 script: go test -v $(glide novendor)

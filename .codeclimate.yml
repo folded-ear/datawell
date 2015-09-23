@@ -1,0 +1,18 @@
+# http://docs.codeclimate.com/article/289-configuring-your-repository-via-codeclimate-yml#platform
+# http://docs.codeclimate.com/article/296-engines-available-engines
+
+engines:
+  golint:
+    enabled: true
+  gofmt:
+    enabled: true
+  govet:
+    enabled: true
+
+ratings:
+  paths:
+  - "**.go"
+
+exclude_paths:
+  - vendor/**/*
+  - Godeps/**/*

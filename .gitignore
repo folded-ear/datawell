@@ -27,6 +27,7 @@ _testmain.go
 *.iml
 *.ipr
 *.iws
+*.ids
 
 vendor
 /datawell

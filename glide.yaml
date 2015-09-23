@@ -1,7 +1,0 @@
-package: github.com/folded-ear/datawell
-import:
-  - package: github.com/jinzhu/gorm
-  - package: github.com/vharitonsky/iniflags
-  - package: bitbucket.org/liamstask/goose
-    subpackages:
-      - /lib/goose

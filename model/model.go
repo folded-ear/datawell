@@ -18,7 +18,7 @@ type baseModel struct {
 }
 
 /*
-User represents a user of the system.
+User represents a user of datawell which owns events and tags.
 */
 type User struct {
 	baseModel
@@ -29,16 +29,17 @@ type User struct {
 }
 
 /*
-Tag represents a single tag in the system.  Note that tags are top-level items;
-they are not owned by a specific user.
+Tag represents a single tag in datawell, which are owned by a single user.
 */
 type Tag struct {
 	baseModel
-	Tag string
+	UserID int64
+	Tag    string
 }
 
 /*
-Event represents an event that was recorded in datawell.
+Event represents an event that was recorded in datawell, which are owned by a
+single user.
 */
 type Event struct {
 	baseModel

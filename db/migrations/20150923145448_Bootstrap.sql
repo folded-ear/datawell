@@ -20,15 +20,17 @@ create table events (
 
     notes text,
     constraint pk_events primary key (id),
-    constraint fk_event_user_id foreign key (user_id) references users (id) on delete cascade
+    constraint fk_events_user_id foreign key (user_id) references users (id) on delete cascade
 );
 create table tags (
     id bigint not null default nextval('id_seq'),
     created_at timestamptz not null default now(),
     updated_at timestamptz not null default now(),
+    user_id bigint not null,
     tag varchar,
     constraint pk_tags primary key (id),
-    constraint uk_tags_tag unique (tag)
+    constraint fk_tags_user_id foreign key (user_id) references users (id) on delete cascade,
+    constraint uk_tags_user_tag unique (user_id, tag)
 );
 create table event_tags (
     event_id bigint not null,

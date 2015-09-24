@@ -1,6 +1,7 @@
 # datawell
 
-![Build Status](https://travis-ci.org/folded-ear/datawell.svg)
+[![Build Status](https://travis-ci.org/folded-ear/datawell.svg)](https://travis-ci.org/folded-ear/datawell)
+[![Code Climate](https://codeclimate.com/github/folded-ear/datawell/badges/gpa.svg)](https://codeclimate.com/github/folded-ear/datawell)
 
 ## install
 

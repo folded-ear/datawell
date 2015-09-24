@@ -1,3 +1,7 @@
+/*
+Package main is the main entrypoint to the datawell application, including
+configuration loading.
+*/
 package main
 
 import (

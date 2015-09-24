@@ -13,14 +13,14 @@ type config struct {
 }
 
 const (
-	DEFAULT_DRIVER_NAME     = "use db/dbconf.yml"
-	DEFAULT_DATASOURCE_NAME = "use db/dbconf.yml"
+	DefaultDriverName     = "use db/dbconf.yml"
+	DefaultDataSourceName = "use db/dbconf.yml"
 )
 
 var (
 	env            = flag.String("env", "development", "the DB/Goose environment to use")
-	driverName     = flag.String("db-driver-name", DEFAULT_DRIVER_NAME, "The database driver name (the first param to sql.Open)")
-	dataSourceName = flag.String("db-datasource-name", DEFAULT_DATASOURCE_NAME, "The datasource name (the second param to sql.Open)")
+	driverName     = flag.String("db-driver-name", DefaultDriverName, "The database driver name (the first param to sql.Open)")
+	dataSourceName = flag.String("db-datasource-name", DefaultDataSourceName, "The datasource name (the second param to sql.Open)")
 )
 
 func newConfig() (*config, error) {
@@ -32,15 +32,15 @@ func newConfig() (*config, error) {
 	config.driverName = *driverName
 	config.dataSourceName = *dataSourceName
 
-	if *driverName == DEFAULT_DRIVER_NAME || *dataSourceName == DEFAULT_DATASOURCE_NAME {
+	if *driverName == DefaultDriverName || *dataSourceName == DefaultDataSourceName {
 		gDbConf, err := goose.NewDBConf("./db", *env, "")
 		if err != nil {
 			return nil, err
 		}
-		if *driverName == DEFAULT_DRIVER_NAME {
+		if *driverName == DefaultDriverName {
 			config.driverName = gDbConf.Driver.Name
 		}
-		if *dataSourceName == DEFAULT_DATASOURCE_NAME {
+		if *dataSourceName == DefaultDataSourceName {
 			config.dataSourceName = gDbConf.Driver.OpenStr
 		}
 	}

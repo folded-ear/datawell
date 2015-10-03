@@ -7,6 +7,7 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"github.com/folded-ear/datawell/model"
 	"github.com/jinzhu/gorm"
 	"time"
 )
@@ -34,4 +35,25 @@ func main() {
 		return
 	}
 	fmt.Printf("it's %v\n", now)
+
+	gorm, err := gorm.Open(config.driverName, db)
+	if err != nil {
+		fmt.Printf("gorm open error: %v\n", err)
+		return
+	}
+
+	tx := gorm.Begin()
+
+	//	user := model.User{
+	//		Name:     "Barney Boisvert",
+	//		Username: "barneyb"}
+	//	tx.Create(&user)
+
+	users := make([]model.User, 10)
+	tx.Find(&users)
+	for _, u := range users {
+		fmt.Printf("user #%v: %v\n", u.ID, u.Username)
+	}
+
+	tx.Commit()
 }

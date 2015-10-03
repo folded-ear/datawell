@@ -4,6 +4,7 @@ Package model houses the structs that are persisted in the database.
 package model
 
 import (
+	"database/sql"
 	"time"
 )
 
@@ -45,6 +46,24 @@ type Event struct {
 	baseModel
 	UserID    int64
 	Timestamp time.Time
-	Tags      []Tag `gorm:"many2many:event_tags;"`
+	Tags      []EventTag
 	Notes     string
+}
+
+/*
+tagRef is a struct for references of a tag from "something" else, which will be
+expressed as embedding structs.
+*/
+type tagRef struct {
+	baseModel
+	Tag    Tag
+	Number sql.NullFloat64
+}
+
+/*
+EventTag represents a tag that was added to an event, optionally with a number.
+*/
+type EventTag struct {
+	tagRef
+	Event Event
 }

@@ -35,6 +35,7 @@ create table tags (
 create table event_tags (
     event_id bigint not null,
     tag_id bigint not null,
+    number float8 not null default 1,
     constraint pk_event_tags primary key (event_id, tag_id),
     constraint fk_event_tags_event_id foreign key (event_id) references events (id),
     constraint fk_event_tags_tag_id foreign key (tag_id) references tags (id)

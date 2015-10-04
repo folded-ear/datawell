@@ -39,35 +39,32 @@ than happy to discuss, answer questions, and merge pull requests as needed.
 Configuration is provided by command-line flags:
 
     $ datawell --help
-    Usage of datawell:
-      -config string
-    	Path to ini config for using in go flags. May be relative to the current executable path.
-      -configUpdateInterval duration
-            Update interval for re-reading config file set via -config flag. Zero disables config file re-reading.
+    datawell is what EventLog became.
+    
+    Usage:
+        datawell [options] <subcommand> [subcommand options]
+    
+    Options:
       -db-datasource-name string
-            The datasource name (the second param to sql.Open) (default "use-dbconf.yml")
+            The datasource name (the second param to sql.Open) (default "use db/dbconf.yml")
       -db-driver-name string
-            The database driver name (the first param to sql.Open) (default "use-dbconf.yml")
-      -dumpflags
-            Dumps values for all flags defined in the app into stdout in ini-compatible syntax and terminates the app.
+            The database driver name (the first param to sql.Open) (default "use db/dbconf.yml")
       -env string
             the DB/Goose environment to use (default "development")
+    
+    Commands:
+    greet      say hello
+    
+    serve      start the web server
+      -port uint
+            Port to listen on (default 8080)
+    
+    demo       run the demo
 
-All options may also be provided via an INI file as specified by the
-`--config` flag.  Flags override the config file values.  You can generate a
-sample config file (to STDOUT) by using the `--dumpflags` flag:
-
-    $ datawell --dumpflags
-    configUpdateInterval = 0  # Update interval for re-reading config file set via -config flag. Zero disables config file re-reading.
-    db-datasource-name = use db/dbconf.yml  # The datasource name (the second param to sql.Open)
-    db-driver-name = use db/dbconf.yml  # The database driver name (the first param to sql.Open)
-    env = development  # the DB/Goose environment to use
-
-Further, the database connect information (driver name and open string) can
-also be provided by a `./db/dbconf.yml` file according to Goose's specs.  This
-has the lowest priority and will be superceded by both the INI file and flags,
-but is useful for keeping DRY in development environments, and is _mandatory_
-if you wish to run the Goose migrations.
+The database connect information (driver name and open string) can also be
+provided by a `./db/dbconf.yml` file according to Goose's specs.  This will be
+superceded by flags, but is useful for keeping DRY in development environments,
+and is _mandatory_ if you wish to run the Goose migrations.
 
 Once configured, you can use Goose to bootstrap your database with the
 necessary schema objects:

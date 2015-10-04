@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/folded-ear/datawell/config"
+)
 
 var serveCmd = &Command{
 	Name:    "serve",
@@ -15,8 +18,8 @@ func init() {
 }
 
 func serveRun(cmd *Command, args ...string) {
-	config, _ := newConfigFromFlagsAndGoose()
-	fmt.Printf("env: %v\n", config.env)
-	fmt.Printf("dsn: %v\n", config.dataSourceName)
+	config, _ := config.LoadConfig()
+	fmt.Printf("env: %v\n", config.Env)
+	fmt.Printf("dsn: %v\n", config.DataSourceName)
 	fmt.Printf("run serve on port %v\n", servePort)
 }

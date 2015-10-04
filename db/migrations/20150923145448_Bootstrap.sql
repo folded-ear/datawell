@@ -17,7 +17,7 @@ create table events (
     created_at timestamptz not null default now(),
     updated_at timestamptz not null default now(),
     user_id bigint not null,
-
+    timestamp timestamptz not null,
     notes text,
     constraint pk_events primary key (id),
     constraint fk_events_user_id foreign key (user_id) references users (id) on delete cascade

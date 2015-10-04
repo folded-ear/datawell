@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"github.com/folded-ear/datawell/config"
 	"github.com/jinzhu/gorm"
+	_ "github.com/lib/pq"
 )
 
 var (

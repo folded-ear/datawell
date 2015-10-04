@@ -6,9 +6,9 @@ create table users (
     id bigint not null default nextval('id_seq'),
     created_at timestamptz not null default now(),
     updated_at timestamptz not null default now(),
-    name varchar(50),
-    username varchar(50),
-    passhash varchar(50),
+    name varchar(50) not null,
+    username varchar(50) not null,
+    passhash varchar(50) not null,
     constraint pk_users primary key (id),
     constraint uk_users_username unique (username)
 );
@@ -18,7 +18,7 @@ create table events (
     updated_at timestamptz not null default now(),
     user_id bigint not null,
     timestamp timestamptz not null,
-    notes text,
+    notes text not null default '',
     constraint pk_events primary key (id),
     constraint fk_events_user_id foreign key (user_id) references users (id) on delete cascade
 );
@@ -27,7 +27,7 @@ create table tags (
     created_at timestamptz not null default now(),
     updated_at timestamptz not null default now(),
     user_id bigint not null,
-    tag varchar,
+    tag varchar not null,
     constraint pk_tags primary key (id),
     constraint fk_tags_user_id foreign key (user_id) references users (id) on delete cascade,
     constraint uk_tags_user_tag unique (user_id, tag)

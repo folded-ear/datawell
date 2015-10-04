@@ -1,7 +1,7 @@
 
 -- +goose Up
 -- SQL in section 'Up' is executed when this migration is applied
-create sequence id_seq;
+create sequence id_seq start 1 increment by 1;
 create table users (
     id bigint not null default nextval('id_seq'),
     created_at timestamptz not null default now(),

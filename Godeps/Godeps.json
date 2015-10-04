@@ -35,11 +35,6 @@
 			"Rev": "45321e63b98c756df17369c027c1df89298e1288"
 		},
 		{
-			"ImportPath": "github.com/vharitonsky/iniflags",
-			"Comment": "v.1.0-23-g7e26b92",
-			"Rev": "7e26b9281b070a9562df8694980c68e56d298c36"
-		},
-		{
 			"ImportPath": "github.com/ziutek/mymysql/godrv",
 			"Comment": "v1.5.4-3-gb559ddd",
 			"Rev": "b559dddd7e2a2ce596f2058bc399805102719eac"

@@ -5,88 +5,108 @@ configuration loading.
 package main
 
 import (
-	"database/sql"
+	"bitbucket.org/liamstask/goose/lib/goose"
+	"flag"
 	"fmt"
-	"github.com/folded-ear/datawell/model"
-	"github.com/jinzhu/gorm"
-	"time"
+	"os"
+	"strings"
+	"text/template"
 )
 
-func main() {
-	config, err := newConfig()
-	if err != nil {
-		fmt.Printf("error reading config: %v\n", err)
-		return
-	}
+const (
+	DefaultDriverName     = "use db/dbconf.yml"
+	DefaultDataSourceName = "use db/dbconf.yml"
+)
 
-	fmt.Printf("driver: %v, open: %v\n", config.driverName, config.dataSourceName)
+var (
+	env            = flag.String("env", "development", "the DB/Goose environment to use")
+	driverName     = flag.String("db-driver-name", DefaultDriverName, "The database driver name (the first param to sql.Open)")
+	dataSourceName = flag.String("db-datasource-name", DefaultDataSourceName, "The datasource name (the second param to sql.Open)")
+)
 
-	db, err := sql.Open(config.driverName, config.dataSourceName)
-	if err != nil {
-		fmt.Printf("connect error: %v\n", err)
-		return
-	}
-	var now time.Time
-	err = db.QueryRow("select now()").Scan(&now)
-	if err != nil {
-		fmt.Printf("query error: %v\n", err)
-		return
-	}
-	fmt.Printf("it's %v\n", now)
-
-	gorm, err := gorm.Open(config.driverName, db)
-	if err != nil {
-		fmt.Printf("gorm open error: %v\n", err)
-		return
-	}
-	gorm.LogMode(true)
-
-	tx := gorm.Begin()
-
-	user := model.User{}
-	fmt.Println(tx.FirstOrCreate(&user, model.User{
-		Name:     "Barney Boisvert",
-		Username: "barneyb"}).Error)
-
-	coffee := model.Tag{}
-	fmt.Println(tx.FirstOrCreate(&coffee, model.Tag{
-		UserID: user.ID,
-		Tag:    "coffee"}).Error)
-	desk := model.Tag{}
-	fmt.Println(tx.FirstOrCreate(&desk, model.Tag{
-		UserID: user.ID,
-		Tag:    "desk"}).Error)
-	for _, t := range []model.Tag{coffee, desk} {
-		fmt.Printf("tag %v has id %v\n", t.Tag, t.ID)
-	}
-
-	event := model.Event{
-		UserID:    user.ID,
-		Timestamp: time.Now(),
-		Notes:     "i am some notes, yo!"}
-	fmt.Println(tx.Create(&event).Error)
-	fmt.Printf("event %v\n", event.ID)
-
-	tagRefs := make([]model.EventTag, 2)
-	tagRefs[0] = model.EventTag{
-		EventID: event.ID,
-		TagID:   coffee.ID,
-		Number:  2}
-	tagRefs[1] = model.EventTag{
-		EventID: event.ID,
-		TagID:   desk.ID,
-		Number:  1}
-	for _, tr := range tagRefs {
-		fmt.Println(tx.Create(&tr).Error)
-		fmt.Printf("event tag %v:%v\n", tr.EventID, tr.TagID)
-	}
-
-	events := []model.Event{}
-	fmt.Println(tx.Preload("Tags").Preload("Tags.Tag").Find(&events).Error)
-	for _, e := range events {
-		fmt.Printf("event %v: %v %v\n", e.ID, e.Timestamp, e.Tags)
-	}
-	tags := events[0].Tags
-	fmt.Printf("event %v, &tags: %p, &tags[0]: %p, &tags[1]: %p", events[0].ID, &tags, &(tags[0]), &(tags[1]))
-	tx.Commit()
+var commands = []*Command{
+	demoCmd,
 }
+
+type config struct {
+	env            string
+	driverName     string
+	dataSourceName string
+}
+
+func newConfigFromFlagsAndGoose() (*config, error) {
+	config := config{
+		env: *env,
+	}
+
+	config.driverName = *driverName
+	config.dataSourceName = *dataSourceName
+
+	if *driverName == DefaultDriverName || *dataSourceName == DefaultDataSourceName {
+		gDbConf, err := goose.NewDBConf("./db", *env, "")
+		if err != nil {
+			return nil, err
+		}
+		if *driverName == DefaultDriverName {
+			config.driverName = gDbConf.Driver.Name
+		}
+		if *dataSourceName == DefaultDataSourceName {
+			config.dataSourceName = gDbConf.Driver.OpenStr
+		}
+	}
+
+	return &config, nil
+}
+
+func main() {
+	flag.Usage = usage
+	flag.Parse()
+
+	args := flag.Args()
+	if len(args) == 0 || args[0] == "-h" || args[0] == "-help" || args[0] == "--help" || args[0] == "help" {
+		flag.Usage()
+		return
+	}
+
+	var cmd *Command
+	name := args[0]
+	for _, c := range commands {
+		if strings.HasPrefix(c.Name, name) {
+			cmd = c
+			break
+		}
+	}
+
+	if cmd == nil {
+		fmt.Printf("error: unknown command %q\n", name)
+		flag.Usage()
+		os.Exit(1)
+	}
+
+	cmd.Exec(args[1:])
+}
+
+func usage() {
+	fmt.Print(usagePrefix)
+	flag.PrintDefaults()
+	err := usageTmpl.Execute(os.Stdout, commands)
+	if err != nil {
+		fmt.Println(err)
+	}
+}
+
+var usagePrefix = `
+datawell is what EventLog became.
+
+Usage:
+    datawell [options] <subcommand> [subcommand options]
+
+Options:
+`
+
+var usageTmpl = template.Must(template.New("usage").Parse(
+	`
+Commands:{{range .}}
+{{.Name | printf "%-10s"}} {{.Summary}}
+{{.PrintFlagDefaultsToString}}{{end}}
+`))

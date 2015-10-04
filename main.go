@@ -25,6 +25,8 @@ var (
 )
 
 var commands = []*Command{
+	greetCmd,
+	serveCmd,
 	demoCmd,
 }
 

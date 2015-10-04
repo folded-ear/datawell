@@ -16,6 +16,7 @@ var commands = []*Command{
 	greetCmd,
 	serveCmd,
 	demoCmd,
+	echoCmd,
 }
 
 func main() {

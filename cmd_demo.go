@@ -6,6 +6,7 @@ import (
 	"github.com/folded-ear/datawell/config"
 	"github.com/folded-ear/datawell/model"
 	"github.com/jinzhu/gorm"
+	"log"
 	"time"
 )
 
@@ -17,31 +18,24 @@ var demoCmd = &Command{
 }
 
 func demoRun(cmd *Command, args ...string) {
-	config, err := config.LoadConfig()
-	if err != nil {
-		fmt.Printf("error reading config: %v\n", err)
-		return
-	}
+	config := config.LoadConfig()
 
 	fmt.Printf("driver: %v, open: %v\n", config.DriverName, config.DataSourceName)
 
 	db, err := sql.Open(config.DriverName, config.DataSourceName)
 	if err != nil {
-		fmt.Printf("connect error: %v\n", err)
-		return
+		log.Fatalf("connect error: %v\n", err)
 	}
 	var now time.Time
 	err = db.QueryRow("select now()").Scan(&now)
 	if err != nil {
-		fmt.Printf("query error: %v\n", err)
-		return
+		log.Fatalf("query error: %v\n", err)
 	}
 	fmt.Printf("it's %v\n", now)
 
 	gorm, err := gorm.Open(config.DriverName, db)
 	if err != nil {
-		fmt.Printf("gorm open error: %v\n", err)
-		return
+		log.Fatalf("gorm open error: %v\n", err)
 	}
 	gorm.LogMode(true)
 

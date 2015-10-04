@@ -18,7 +18,7 @@ func init() {
 }
 
 func serveRun(cmd *Command, args ...string) {
-	config, _ := config.LoadConfig()
+	config := config.LoadConfig()
 	fmt.Printf("env: %v\n", config.Env)
 	fmt.Printf("dsn: %v\n", config.DataSourceName)
 	fmt.Printf("run serve on port %v\n", servePort)

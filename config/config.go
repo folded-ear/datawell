@@ -3,6 +3,7 @@ package config
 import (
 	"bitbucket.org/liamstask/goose/lib/goose"
 	"flag"
+	"log"
 )
 
 type Config struct {
@@ -23,30 +24,30 @@ var (
 	dataSourceName = flag.String("db-datasource-name", DefaultDataSourceName, "The datasource name (the second param to sql.Open)")
 )
 
-func LoadConfig() (*Config, error) {
-	if config != nil {
-		return config, nil
+func LoadConfig() *Config {
+	if config == nil {
+		cfg := &Config{
+			Env: *env,
+		}
+
+		cfg.DriverName = *driverName
+		cfg.DataSourceName = *dataSourceName
+
+		if *driverName == DefaultDriverName || *dataSourceName == DefaultDataSourceName {
+			gDbConf, err := goose.NewDBConf("./db", *env, "")
+			if err != nil {
+				log.Fatal(err)
+			}
+			if *driverName == DefaultDriverName {
+				cfg.DriverName = gDbConf.Driver.Name
+			}
+			if *dataSourceName == DefaultDataSourceName {
+				cfg.DataSourceName = gDbConf.Driver.OpenStr
+			}
+		}
+
+		config = cfg
 	}
 
-	config := Config{
-		Env: *env,
-	}
-
-	config.DriverName = *driverName
-	config.DataSourceName = *dataSourceName
-
-	if *driverName == DefaultDriverName || *dataSourceName == DefaultDataSourceName {
-		gDbConf, err := goose.NewDBConf("./db", *env, "")
-		if err != nil {
-			return nil, err
-		}
-		if *driverName == DefaultDriverName {
-			config.DriverName = gDbConf.Driver.Name
-		}
-		if *dataSourceName == DefaultDataSourceName {
-			config.DataSourceName = gDbConf.Driver.OpenStr
-		}
-	}
-
-	return &config, nil
+	return config
 }

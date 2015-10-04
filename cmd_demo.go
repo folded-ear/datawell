@@ -11,7 +11,7 @@ import (
 var demoCmd = &Command{
 	Name:    "demo",
 	Usage:   "i do a little demo schmanky",
-	Summary: "run the temo",
+	Summary: "run the demo",
 	Run:     demoRun,
 }
 

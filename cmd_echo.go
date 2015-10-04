@@ -5,7 +5,7 @@ import "fmt"
 var echoCmd = &Command{
 	Name:    "echo",
 	Usage:   "i echo back all flags and args",
-	Summary: "echo",
+	Summary: "echo out flags and args",
 	Run:     echoRun,
 }
 

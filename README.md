@@ -31,10 +31,12 @@ To run migrations, you'll need [Goose](https://bitbucket.org/liamstask/goose/):
 PostgreSQL 9.2 is "required". Other versions will probably work fine, as only
 core SQL functionality is used. In fact, other databases would very likely also
 work, though Go's SQL drivers do no have a consistent approach to bind
-parameters, so it'd take a bit of effort to make it work.  To this point there
-has not been a compelling reason to undertake that effort, but if you have one
-(or even better, are willing to put in the time) we'd be happy to discuss and
-help in whatever way we can.
+parameters, so it'd take a bit of effort to make it work
+
+To this point there has not been a compelling reason to undertake that effort,
+but if you have one (or even better, are willing to put in the time) we'd be
+happy to discuss and help in whatever way we can.  The `sqlx` package can likely
+provide a way around bind parameter differences, for example.
     
 ## configuration
 
@@ -63,6 +65,8 @@ Configuration is provided by command-line flags:
     
     demo       run the demo
 
+    echo       echo out flags and args
+
 The database connect information (driver name and open string) can also be
 provided by a `./db/dbconf.yml` file according to Goose's specs.  This will be
 superceded by flags, but is useful for keeping DRY in development environments,
@@ -72,3 +76,9 @@ Once configured, you can use Goose to bootstrap your database with the
 necessary schema objects:
 
     $ goose up
+    ...
+    $ goose status
+    goose: status for environment 'development'
+        Applied At                  Migration
+        =======================================
+        Sun Oct  4 21:37:08 2015 -- 20150923145448_Bootstrap.sql

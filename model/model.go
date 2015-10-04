@@ -4,7 +4,6 @@ Package model houses the structs that are persisted in the database.
 package model
 
 import (
-	"database/sql"
 	"time"
 )
 
@@ -15,10 +14,12 @@ type User struct {
 	ID        int64 `gorm:"primary_key"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
-	Name      string
-	Username  string
-	Passhash  string
-	Events    []Event
+
+	Username string
+	Passhash string
+	Name     string
+
+	Events []Event
 }
 
 /*
@@ -28,8 +29,11 @@ type Tag struct {
 	ID        int64 `gorm:"primary_key"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
-	UserID    int64
-	Tag       string
+
+	UserID int64
+	Tag    string
+
+	User *User
 }
 
 /*
@@ -40,20 +44,23 @@ type Event struct {
 	ID        int64 `gorm:"primary_key"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
+
 	UserID    int64
 	Timestamp time.Time
-	Tags      []EventTag
 	Notes     string
+
+	Tags []EventTag
+	User *User
 }
 
 /*
 EventTag represents a tag that was added to an event, optionally with a number.
 */
 type EventTag struct {
-	ID        int64 `gorm:"primary_key"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	Event     Event
-	Tag       Tag
-	Number    sql.NullFloat64
+	EventID int64 `gorm:"primary_key"`
+	TagID   int64 `gorm:"primary_key"`
+	Number  float64
+
+	Event *Event
+	Tag   *Tag
 }

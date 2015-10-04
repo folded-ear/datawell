@@ -29,10 +29,12 @@ To run migrations, you'll need [Goose](https://bitbucket.org/liamstask/goose/):
 ## database
 
 PostgreSQL 9.2 is "required". Other versions will probably work fine, as only
-core SQL functionality is used. In fact, other databases probably will work
-too. Only PostgreSQL 9.2 is supported though, because I'm lazy and don't want
-to worry about cross-platform stuff.  If _you_ care, however, I would be more
-than happy to discuss, answer questions, and merge pull requests as needed.
+core SQL functionality is used. In fact, other databases would very likely also
+work, though Go's SQL drivers do no have a consistent approach to bind
+parameters, so it'd take a bit of effort to make it work.  To this point there
+has not been a compelling reason to undertake that effort, but if you have one
+(or even better, are willing to put in the time) we'd be happy to discuss and
+help in whatever way we can.
     
 ## configuration
 

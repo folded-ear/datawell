@@ -12,7 +12,7 @@ var (
 	gormDb *gorm.DB
 )
 
-func DB() (*sql.DB, error) {
+func Db() (*sql.DB, error) {
 	if sqlDb == nil {
 		cfg := config.LoadConfig()
 		db, err := sql.Open(cfg.DriverName, cfg.DataSourceName)
@@ -28,10 +28,10 @@ func DB() (*sql.DB, error) {
 	return sqlDb, nil
 }
 
-func GORM() (*gorm.DB, error) {
+func Gorm() (*gorm.DB, error) {
 	if gormDb == nil {
 		cfg := config.LoadConfig()
-		db, err := DB()
+		db, err := Db()
 		if err != nil {
 			return nil, err
 		}

@@ -20,7 +20,7 @@ func demoRun(cmd *Command, args ...string) {
 
 	fmt.Printf("driver: %v, open: %v\n", config.DriverName, config.DataSourceName)
 
-	db, err := model.DB()
+	db, err := model.Db()
 	if err != nil {
 		log.Fatalf("connect error: %v\n", err)
 	}
@@ -31,7 +31,7 @@ func demoRun(cmd *Command, args ...string) {
 	}
 	fmt.Printf("it's %v\n", now)
 
-	gorm, err := model.GORM()
+	gorm, err := model.Gorm()
 	if err != nil {
 		log.Fatalf("gorm open error: %v\n", err)
 	}

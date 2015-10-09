@@ -9,26 +9,32 @@ import (
 	"time"
 )
 
+type AddUserCommand struct {
+	Command
+	name     *string
+	username *string
+}
+
 const (
 	InitialPasswordLength = 12
 	PasswordHashCost      = 13 // takes about 700ms on my laptop
 )
 
 var (
-	addUserCmd = &Command{
-		Name:    "add-user",
-		Usage:   "",
-		Summary: "add a new user to the system",
-		Run:     addUserRun,
+	addUserCmd = &AddUserCommand{
+		Command: Command{
+			Name:    "add-user",
+			Usage:   "",
+			Summary: "add a new user to the system",
+		},
 	}
-	name     string
-	username string
 )
 
 func init() {
 	rand.Seed(time.Now().UnixNano())
-	addUserCmd.Flag.StringVar(&name, "name", "", "The name of the new user")
-	addUserCmd.Flag.StringVar(&username, "username", "", "The username of the new user (must be unique)")
+	addUserCmd.Run = addUserRun
+	addUserCmd.name = addUserCmd.Flag.String("name", "", "The name of the new user")
+	addUserCmd.username = addUserCmd.Flag.String("username", "", "The username of the new user (must be unique)")
 }
 
 func createPassword() string {
@@ -54,14 +60,17 @@ func createPassword() string {
 }
 
 func addUserRun(cmd *Command, args ...string) {
+	if *addUserCmd.username == "" {
+		log.Fatal("A username must be specified")
+	}
 	passwd := createPassword()
 	encPasswd, err := bcrypt.GenerateFromPassword([]byte(passwd), PasswordHashCost)
 	if err != nil {
 		log.Fatalf("Failed to bcrypt password: %v", err)
 	}
 	user := model.User{
-		Username: username,
-		Name:     name,
+		Username: *addUserCmd.username,
+		Name:     *addUserCmd.name,
 		Passhash: string(encPasswd),
 	}
 	db, err := model.Gorm()

@@ -15,11 +15,11 @@ import (
 var commands = []*Command{
 	greetCmd,
 	&serveCmd.Command,
-	demoCmd,
-	echoCmd,
 	userListCmd,
 	&userAddCmd.Command,
 	&userEditCmd.Command,
+	demoCmd,
+	echoCmd,
 }
 
 func main() {
@@ -33,18 +33,33 @@ func main() {
 	}
 
 	var cmd *Command
+	var prefixCmds []*Command
 	name := args[0]
 	for _, c := range commands {
-		if strings.HasPrefix(c.Name, name) {
+		if c.Name == name {
 			cmd = c
 			break
+		} else if strings.HasPrefix(c.Name, name) {
+			prefixCmds = append(prefixCmds, c)
 		}
 	}
 
 	if cmd == nil {
-		fmt.Printf("error: unknown command %q\n", name)
-		flag.Usage()
-		os.Exit(1)
+		if len(prefixCmds) == 1 {
+			cmd = prefixCmds[0]
+		} else {
+			if len(prefixCmds) > 1 {
+				names := []string{}
+				for _, c := range prefixCmds {
+					names = append(names, c.Name)
+				}
+				fmt.Printf("error: %q prefix-matches multiple commands: %v\n", name, names)
+			} else {
+				fmt.Printf("error: unknown command %q\n", name)
+			}
+			fmt.Printf("run 'datawell help' for usage\n")
+			os.Exit(1)
+		}
 	}
 
 	cmd.Exec(args[1:])
@@ -70,7 +85,7 @@ Options:
 
 var usageTmpl = template.Must(template.New("usage").Parse(
 	`
-Commands:{{range .}}
+Subcommands:{{range .}}
 {{.Name | printf "%-10s"}} {{.Summary}}
 {{.SprintFlagDefaults}}{{end}}
 `))

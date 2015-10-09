@@ -17,6 +17,7 @@ var commands = []*Command{
 	serveCmd,
 	demoCmd,
 	echoCmd,
+	addUserCmd,
 }
 
 func main() {

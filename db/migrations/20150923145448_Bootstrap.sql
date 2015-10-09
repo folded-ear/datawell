@@ -6,9 +6,9 @@ create table users (
     id bigint not null default nextval('id_seq'),
     created_at timestamptz not null default now(),
     updated_at timestamptz not null default now(),
-    name varchar(50) not null,
-    username varchar(50) not null,
-    passhash varchar(50) not null,
+    name varchar not null,
+    username varchar not null,
+    passhash varchar not null,
     constraint pk_users primary key (id),
     constraint uk_users_username unique (username)
 );

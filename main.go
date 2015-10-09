@@ -19,6 +19,7 @@ var commands = []*Command{
 	echoCmd,
 	listUsersCmd,
 	addUserCmd,
+	editUserCmd,
 }
 
 func main() {

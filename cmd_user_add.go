@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-type AddUserCommand struct {
+type UserAddCommand struct {
 	Command
 	name     *string
 	username *string
@@ -21,9 +21,9 @@ const (
 )
 
 var (
-	addUserCmd = &AddUserCommand{
+	userAddCmd = &UserAddCommand{
 		Command: Command{
-			Name:    "add-user",
+			Name:    "user-add",
 			Usage:   "",
 			Summary: "add a new user to the system",
 		},
@@ -32,9 +32,9 @@ var (
 
 func init() {
 	rand.Seed(time.Now().UnixNano())
-	addUserCmd.Run = addUserRun
-	addUserCmd.name = addUserCmd.Flag.String("name", "", "The name of the new user")
-	addUserCmd.username = addUserCmd.Flag.String("username", "", "The username of the new user (must be unique)")
+	userAddCmd.Run = userAddRun
+	userAddCmd.name = userAddCmd.Flag.String("name", "", "The name of the new user")
+	userAddCmd.username = userAddCmd.Flag.String("username", "", "The username of the new user (must be unique)")
 }
 
 func createPassword() string {
@@ -59,8 +59,8 @@ func createPassword() string {
 	return string(password)
 }
 
-func addUserRun(cmd *Command, args ...string) {
-	if *addUserCmd.username == "" {
+func userAddRun(cmd *Command, args ...string) {
+	if *userAddCmd.username == "" {
 		log.Fatal("A username must be specified")
 	}
 	passwd := createPassword()
@@ -69,8 +69,8 @@ func addUserRun(cmd *Command, args ...string) {
 		log.Fatalf("Failed to bcrypt password: %v", err)
 	}
 	user := model.User{
-		Username: *addUserCmd.username,
-		Name:     *addUserCmd.name,
+		Username: *userAddCmd.username,
+		Name:     *userAddCmd.name,
 		Passhash: string(encPasswd),
 	}
 	db, err := model.Gorm()

@@ -18,7 +18,7 @@ var commands = []*Command{
 	demoCmd,
 	echoCmd,
 	listUsersCmd,
-	&addUserCmd.Command,
+	&userAddCmd.Command,
 	&editUserCmd.Command,
 }
 

@@ -27,7 +27,7 @@ func (c *Command) Exec(args []string) {
 	c.Run(c, c.Flag.Args()...)
 }
 
-func (c *Command) PrintFlagDefaultsToString() string {
+func (c *Command) SprintFlagDefaults() string {
 	var s bytes.Buffer
 	c.Flag.SetOutput(&s)
 	c.Flag.PrintDefaults()

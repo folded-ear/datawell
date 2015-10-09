@@ -72,5 +72,5 @@ var usageTmpl = template.Must(template.New("usage").Parse(
 	`
 Commands:{{range .}}
 {{.Name | printf "%-10s"}} {{.Summary}}
-{{.PrintFlagDefaultsToString}}{{end}}
+{{.SprintFlagDefaults}}{{end}}
 `))

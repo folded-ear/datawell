@@ -8,15 +8,15 @@ import (
 )
 
 var (
-	listUsersCmd = &Command{
-		Name:    "list-users",
+	userListCmd = &Command{
+		Name:    "user-list",
 		Usage:   "",
 		Summary: "list all users in the system",
-		Run:     listUsersRun,
+		Run:     userListRun,
 	}
 )
 
-func listUsersRun(cmd *Command, args ...string) {
+func userListRun(cmd *Command, args ...string) {
 	users := []model.User{}
 	db, err := model.Gorm()
 	if err != nil {

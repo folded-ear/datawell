@@ -14,7 +14,7 @@ import (
 
 var commands = []*Command{
 	greetCmd,
-	serveCmd,
+	&serveCmd.Command,
 	demoCmd,
 	echoCmd,
 	listUsersCmd,

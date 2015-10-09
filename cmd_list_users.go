@@ -41,9 +41,9 @@ func listUsersRun(cmd *Command, args ...string) {
 			unLen = l
 		}
 	}
-	fmt.Printf("| %*s | %-*s | %-*s |\n", idLen, "id", nameLen, "name", unLen, "username")
+	fmt.Printf("| %*s | %-*s | %-*s |\n", idLen, "id", unLen, "username", nameLen, "name")
 	for _, u := range users {
-		fmt.Printf("| %*d | %-*s | %-*s |\n", idLen, u.ID, nameLen, u.Name, unLen, u.Username)
+		fmt.Printf("| %*d | %-*s | %-*s |\n", idLen, u.ID, unLen, u.Username, nameLen, u.Name)
 	}
 	fmt.Printf("%d user(s)\n", len(users))
 }
